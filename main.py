@@ -2,46 +2,33 @@ import pygame
 import sys
 import random
 from player import Player
-
+import settings
 pygame.init()
 
-#Setting world dimensions
-ROOM_WIDTH = 800
-ROOM_HEIGHT = 500
-NUM_ROOMS = 5
-
-WORLD_WIDTH = ROOM_WIDTH * NUM_ROOMS
-WORLD_HEIGHT = ROOM_HEIGHT
 
 def generate_linear_dungeon():
      walls = []
-
-     NUM_ROOMS = random.choice ([5,8])
-     WORLD_WIDTH = ROOM_WIDTH * NUM_ROOMS
-
-
-
     
-     for room_index in range(NUM_ROOMS):
+     for room_index in range(settings.NUM_ROOMS):
 
         #First we calculate the base X offset 
-        room_start_x =  room_index * ROOM_WIDTH
+        room_start_x =  room_index * settings.ROOM_WIDTH
 
-        walls.append(pygame.Rect(room_start_x, 0, ROOM_WIDTH, 20))
-        walls.append(pygame.Rect(room_start_x, ROOM_HEIGHT - 20, ROOM_WIDTH, 20))
+        walls.append(pygame.Rect(room_start_x, 0, settings.ROOM_WIDTH, 20))
+        walls.append(pygame.Rect(room_start_x, settings.ROOM_HEIGHT - 20, settings.ROOM_WIDTH, 20))
 
         if room_index > 0:
             walls.append(pygame.Rect(room_start_x, 0, 20, 180))
             walls.append(pygame.Rect(room_start_x, 320, 20, 180))
 
         else:
-            walls.append(pygame.Rect(room_start_x, 0, 20, ROOM_HEIGHT))
+            walls.append(pygame.Rect(room_start_x, 0, 20, settings.ROOM_HEIGHT))
 
-        if room_index < NUM_ROOMS - 1:
-            walls.append(pygame.Rect(room_start_x + ROOM_WIDTH - 20, 0, 20, 180))     # Top-right post
-            walls.append(pygame.Rect(room_start_x + ROOM_WIDTH - 20, 320, 20, 180))   # Bottom-right post
+        if room_index < settings.NUM_ROOMS - 1:
+            walls.append(pygame.Rect(room_start_x + settings.ROOM_WIDTH - 20, 0, 20, 180))     # Top-right post
+            walls.append(pygame.Rect(room_start_x + settings.ROOM_WIDTH - 20, 320, 20, 180))   # Bottom-right post
         else:
-            walls.append(pygame.Rect(room_start_x + ROOM_WIDTH - 20, 0, 20, ROOM_HEIGHT))
+            walls.append(pygame.Rect(room_start_x + settings.ROOM_WIDTH - 20, 0, 20, settings.ROOM_HEIGHT))
 
         layout_choice = random.choice(["pillars","barriers","empty"])
 
@@ -60,9 +47,8 @@ def generate_linear_dungeon():
 world_walls = generate_linear_dungeon()
 
 #Setting screen and clock
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 500
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+
+screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 pygame.display.set_caption("AI Game")
 clock = pygame.time.Clock()
 
@@ -90,7 +76,6 @@ while True:
     keys = pygame.key.get_pressed()
     dx = 0
     dy = 0
-
     if keys[pygame.K_w]:
         dy = -1
     if keys[pygame.K_s]:
@@ -99,27 +84,13 @@ while True:
         dx = -1
     if keys[pygame.K_d]:
         dx = 1
-
-    player_rect.x += dx
     player.move(dx,dy)
-
-    for wall in world_walls:
-        if player_rect.colliderect(wall):
-            if dx > 0:
-                player_rect.right = wall.left
-            if dx < 0:
-                player_rect.left = wall.right
-    player_rect.y += dy
     
     for wall in world_walls:
-        if player_rect.colliderect(wall):
-            if dy > 0:
-                player_rect.bottom = wall.top
-            if dy < 0:
-                player_rect.top = wall.bottom
-
-    world_boundary = pygame.Rect(0, 0, WORLD_WIDTH, WORLD_HEIGHT)
-    player_rect.clamp_ip(world_boundary)
+       if player.rect.colliderect(wall):
+           player.wall_collision(wall)
+    world_boundary = pygame.Rect(0, 0, settings.WORLD_WIDTH, settings.WORLD_HEIGHT)
+    player.rect.clamp_ip(world_boundary)
 
 
     #enemy movement
@@ -162,11 +133,11 @@ while True:
 
 
     #setting camera to match player position   
-    camera_x = player_rect.x - SCREEN_WIDTH // 2
-    camera_y = player_rect.y - SCREEN_HEIGHT // 2
+    camera_x = player_rect.x - settings.SCREEN_WIDTH // 2
+    camera_y = player_rect.y - settings.SCREEN_HEIGHT // 2
 
-    camera_x = max(0, min(camera_x, WORLD_WIDTH - SCREEN_WIDTH))
-    camera_y = max(0, min(camera_y, WORLD_HEIGHT - SCREEN_HEIGHT))
+    camera_x = max(0, min(camera_x, settings.WORLD_WIDTH - settings.SCREEN_WIDTH))
+    camera_y = max(0, min(camera_y, settings.WORLD_HEIGHT - settings.SCREEN_HEIGHT))
 
 
     #Setting Game Up
