@@ -1,0 +1,10 @@
+import pygame
+
+
+class Wall:
+    def __init__(self, x, y, height, width):
+        self.x = x
+        self.y = y
+        self.height = height
+        self.width = width
+        self.rect = pygame.Rect(self.x,self.y, self.height, self.width)
