@@ -2,12 +2,13 @@ import pygame
 
 
 class Entity:
-    def __init__(self, x, y, health, damage, speed):
+    def __init__(self, x, y, health, damage, speed, color=(255,255,255)):
         self.x = x
         self.y = y
         self.health = health
         self.damage = damage
         self.speed = speed
+        self.color = color
         self.rect = pygame.Rect(self.x,self.y, 40, 40)
 
     def move(self, dx, dy, walls):

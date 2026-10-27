@@ -3,10 +3,26 @@ from entity import Entity
 
 
 class Enemy(Entity):
-    def __init__(self, x, y, health=100, damage=20, speed=5):
-        super().__init__(x, y, health, damage, speed)
+    def __init__(self, x, y):
+        super().__init__(x, y, health=100, damage=15, speed=3, color=(255,0,0))
 
-        self.rect = pygame.Rect(self.x,self.y, 40, 40)
+    def chase(self, player, walls):
+        dx = 0
+        dy = 0
+
+        if self.x < player.x:
+            dx = 1
+        elif self.x > player.x:
+            dx = -1
+
+        if self.y < player.y:
+            dy = 1
+        elif self.y > player.y:
+            dy = -1
+
+        self.move(dx,dy, walls)
+
+
 
     
         
