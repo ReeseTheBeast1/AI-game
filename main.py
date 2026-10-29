@@ -19,11 +19,11 @@ clock = pygame.time.Clock()
 camera = Camera()
 
 #Setting player and enemy attributes
-player = Player(50, 50)
+player = Player(20, settings.WORLD_HEIGHT - 60)
 enemys = [
-    Enemy(300,400),
-    Enemy(500,300),
-    Enemy(1500,400)
+    Enemy(300,settings.WORLD_HEIGHT - 60),
+    Enemy(500,settings.WORLD_HEIGHT - 60),
+    Enemy(1500,settings.WORLD_HEIGHT - 60)
 ]
 
 # Main game loop
@@ -40,10 +40,8 @@ while True:
     keys = pygame.key.get_pressed()
     dx = 0
     dy = 0
-    if keys[pygame.K_w]:
+    if keys[pygame.K_SPACE]:
         dy = -1
-    if keys[pygame.K_s]:
-        dy = 1
     if keys[pygame.K_a]:
         dx = -1
     if keys[pygame.K_d]:
@@ -59,7 +57,7 @@ while True:
 
     for wall in world_walls:
         draw_rect = camera.apply(wall.rect)
-        pygame.draw.rect(screen, (80, 90, 110), draw_rect)
+        pygame.draw.rect(screen, (50, 90, 110), draw_rect)
 
     player_draw_rect = camera.apply(player.rect)
     for enemy in enemys:
